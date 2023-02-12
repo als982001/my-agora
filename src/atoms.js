@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const discIdAtom = atom({
+  key: "discId",
+  default: 100,
+});
+
 export const searchIdAtom = atom({
   key: "searchId",
   default: 0,

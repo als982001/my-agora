@@ -3,10 +3,11 @@ import styled from "styled-components";
 import Make from "./components/make-discussion";
 import { getDiscussions } from "./api";
 import Discussions from "./components/discussions";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   bgColorAtom,
   compBgColorAtom,
+  discIdAtom,
   fontColorAtom,
   searchIdAtom,
 } from "./atoms";
@@ -36,6 +37,7 @@ const Loader = styled.h1``;
 const notice = "[notice] ";
 
 function App() {
+  const discId = useRecoilValue(discIdAtom);
   const bgColor = useRecoilValue(bgColorAtom);
   const compBgColor = useRecoilValue(compBgColorAtom);
   const fontColor = useRecoilValue(fontColorAtom);
@@ -48,6 +50,8 @@ function App() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading((prev) => true);
+
+      setDiscussons([]);
 
       const allDiscussions = await getDiscussions();
 
@@ -64,7 +68,7 @@ function App() {
       setIsLoading((prev) => false);
     }
     fetchData();
-  }, []);
+  }, [discId]);
 
   return (
     <Wrapper style={{ backgroundColor: "#03001C" }}>

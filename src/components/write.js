@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { discIdAtom } from "../atoms.js";
 
 const Wrapper = styled.form`
   width: 100%;
@@ -45,13 +47,36 @@ const Input = styled.input`
   padding-left: 10px;
 `;
 
+const tempAvatarUrl =
+  "https://pbs.twimg.com/profile_images/1151475515066179584/g4YO-WyT_400x400.jpg";
+
 export default function Write() {
+  const discId = useRecoilValue(discIdAtom);
+  const setDiscId = useSetRecoilState(discIdAtom);
   const { register, handleSubmit, watch } = useForm();
 
   // console.log(watch());
 
-  const onValid = (data) => {
-    console.log(data);
+  const onValid = async (data) => {
+    console.log(register);
+    const newDiscussion = {
+      id: discId,
+      createdAt: new Date(),
+      title: data.title,
+      url: "/",
+      author: data.name,
+      avatarUrl: tempAvatarUrl,
+    };
+
+    setDiscId((prev) => ++prev);
+
+    await fetch("http://localhost:4000/discussions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newDiscussion),
+    });
   };
 
   return (

@@ -27,7 +27,11 @@ const discussionsController = {
   },
 
   createDiscussion: (req, res) => {
-    // req.body;
+    const newDiscussion = req.body;
+
+    agoraStatesDiscussions.unshift(newDiscussion);
+
+    return res.status(okCode).json(newDiscussion);
   },
 };
 
