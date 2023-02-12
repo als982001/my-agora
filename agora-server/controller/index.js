@@ -22,8 +22,12 @@ const discussionsController = {
     if (result) {
       return res.status(okCode).json(result);
     } else {
-      return res.status(notFoundCode).end();
+      return res.status(notFoundCode).json({});
     }
+  },
+
+  createDiscussion: (req, res) => {
+    // req.body;
   },
 };
 

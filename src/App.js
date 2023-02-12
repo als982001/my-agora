@@ -1,31 +1,39 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Make from "./components/make-discussion";
 import { getDiscussions } from "./api";
 import Discussions from "./components/discussions";
 import { useRecoilValue } from "recoil";
-import { bgColorAtom, compBgColorAtom, fontColorAtom } from "./atoms";
+import {
+  bgColorAtom,
+  compBgColorAtom,
+  fontColorAtom,
+  searchIdAtom,
+} from "./atoms";
+import Utils from "./components/utils";
 
 const Wrapper = styled.div`
-  width: 70%;
+  width: 50%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  border-radius: 50px;
-  min-width: 1000px;
+  min-width: 700px;
 `;
 
 const Title = styled.h1`
-  width: 50%;
-  padding: 10px 0;
+  width: 100%;
+  height: 70px;
   display: flex;
   justify-content: center;
-  border-radius: 15px;
-  font-size: 60px;
+  align-items: center;
+  font-size: 30px;
   font-weight: bold;
 `;
+
+const Loader = styled.h1``;
+
+const notice = "[notice] ";
 
 function App() {
   const bgColor = useRecoilValue(bgColorAtom);
@@ -33,13 +41,42 @@ function App() {
   const fontColor = useRecoilValue(fontColorAtom);
   // useSetRecoilState => setter 함수
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [discussions, setDiscussons] = useState([]);
+  const [notices, setNotices] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading((prev) => true);
+
+      const allDiscussions = await getDiscussions();
+
+      allDiscussions.map((discussion) => {
+        const isNotice = discussion.title.indexOf(notice);
+
+        if (isNotice === 0) {
+          setNotices((prev) => [...prev, discussion]);
+        } else {
+          setDiscussons((prev) => [...prev, discussion]);
+        }
+      });
+
+      setIsLoading((prev) => false);
+    }
+    fetchData();
+  }, []);
+
   return (
-    <Wrapper style={{ backgroundColor: bgColor }}>
+    <Wrapper style={{ backgroundColor: "#03001C" }}>
       <Title style={{ backgroundColor: compBgColor, color: fontColor }}>
         Agora States
       </Title>
-      <Make />
-      <Discussions />
+      <Utils notices={notices} />
+      {isLoading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <Discussions discussions={discussions} />
+      )}
     </Wrapper>
   );
 }

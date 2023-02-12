@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const searchIdAtom = atom({
+  key: "searchId",
+  default: 0,
+});
+
 export const bgColorAtom = atom({
   key: "bgColor",
   default: "#FAF7F0",

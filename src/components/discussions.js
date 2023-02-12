@@ -1,56 +1,49 @@
+import { useScroll, AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { getDiscussions } from "../api";
 import { useRecoilValue } from "recoil";
 import { compBgColorAtom, fontColorAtom } from "../atoms";
-
-const testImgUrl =
-  "https://pbs.twimg.com/media/FomANxYacAUS1Wf?format=jpg&name=900x900";
-
-const notice = "[notice] ";
+import Discussion from "./discussion";
 
 const Wrapper = styled.div`
-  margin-top: 20px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const Discussion = styled.div`
-  width: 90%;
-  height: 100px;
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  border-radius: 15px;
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  z-index: 5;
 `;
 
-const Avatar = styled.div`
-  width: 64px;
-  height: 64px;
-  background-size: cover;
-  background-position: center center;
-`;
-
-const Title = styled.h2`
-  font-size: 20px;
-`;
-
-const Answered = styled.div`
-  font-size: 25px;
-`;
-
-const Loader = styled.h1``;
-
-export default function Discussions() {
+export default function Discussions({ discussions }) {
+  /*
   const [isLoading, setIsLoading] = useState(true);
   const [discussions, setDiscussons] = useState([]);
   const [notices, setNotices] = useState([]);
-  const compBgColor = useRecoilValue(compBgColorAtom);
-  const fontColor = useRecoilValue(fontColorAtom);
+  const [clicked, setClicked] = useState(null);
+  const [clickedLayoutId, setClickedLayoutId] = useState("");
+  */
+  /*
+  const onDiscussionClick = (idx, layoutId) => {
+    setClickedLayoutId((prev) => layoutId);
+    setClicked((prev) => discussions[idx]);
+  };
 
+  const onOverlayClick = () => {
+    setClickedLayoutId((prev) => "");
+    setClicked((prev) => null);
+  };
+  */
+
+  /*
   useEffect(() => {
     async function fetchData() {
       // const response = await MyAPI.getData(someId);
@@ -72,27 +65,13 @@ export default function Discussions() {
     }
     fetchData();
   }, []);
+  */
 
   return (
     <Wrapper>
-      {isLoading ? (
-        <Loader>Loading...</Loader>
-      ) : discussions.length === 0 ? (
-        <Loader>No Discussons</Loader>
-      ) : (
-        discussions.map((discussion) => (
-          <Discussion
-            key={discussion.id}
-            style={{ backgroundColor: compBgColor }}
-          >
-            <Avatar
-              style={{ backgroundImage: `url(${discussion.avatarUrl})` }}
-            />
-            <Title style={{ color: fontColor }}>{discussion.title}</Title>
-            <Answered>{discussion.answer ? "☑️" : "❌"}</Answered>
-          </Discussion>
-        ))
-      )}
+      {discussions.map((discussion) => (
+        <Discussion key={discussion.id} discussion={discussion}></Discussion>
+      ))}
     </Wrapper>
   );
 }

@@ -11,6 +11,7 @@ export const getDiscussions = async () => {
 
 export const getDiscussionOfId = async (id) => {
   const response = await fetch(`${BASE_PATH}${PORT}/${endPoint}/${id}`);
+
   const json = await response.json();
 
   return json;
